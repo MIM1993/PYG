@@ -1,0 +1,44 @@
+
+
+		<div class="right_content clearfix">
+				<h3 class="common_title2">收货地址</h3>
+				<div class="site_con">
+
+					<dl>
+						<dt>当前地址：</dt>
+						{{if compare .address.IsDefault false}}
+                             <dd>当前无收获地址</dd>
+						{{else}}
+						     <dd>{{.address.Addr}}  &nbsp;&nbsp;&nbsp;({{.address.Receiver}} 收)&nbsp;&nbsp;&nbsp; {{.address.Phone|hide }}</dd>
+						{{end}}
+					</dl>
+
+				</div>
+				<h3 class="common_title2">编辑地址</h3>
+				<div class="site_con">
+					<form method="post" action="/user/site">
+						<div class="form_group">
+							<label>收件人：</label>
+							<input type="text" name="receiver">
+						</div>
+						<div class="form_group form_group2">
+							<label>详细地址：</label>
+							<textarea class="site_area" name="addr"></textarea>
+						</div>
+						<div class="form_group">
+							<label>邮编：</label>
+							<input type="text" name="postCode">
+						</div>
+						<div class="form_group">
+							<label>手机：</label>
+							<input type="text" name="phone">
+						</div>
+
+						<input type="submit" name="" value="提交" class="info_submit">
+					</form>
+				</div>
+		</div>
+
+
+
+

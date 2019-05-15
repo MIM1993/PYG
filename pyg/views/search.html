@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>品优购，优质！优质！</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <script type="text/javascript" src="../static/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../static/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../static/js/slide.js"></script>
+</head>
+<body>
+<div class="header_con">
+    <div class="header">
+        <div class="welcome fl">欢迎来到品优购生鲜!</div>
+        <div class="fr">
+            <div class="login_info fl">
+                欢迎您：<em>张 山</em>
+            </div>
+            <div class="login_btn fl">
+                <a href="login.html">登录</a>
+                <span>|</span>
+                <a href="register.html">注册</a>
+            </div>
+            <div class="user_link fl">
+                <span>|</span>
+                <a href="user_center_info.html">用户中心</a>
+                <span>|</span>
+                <a href="cart.html">我的购物车</a>
+                <span>|</span>
+                <a href="user_center_order.html">我的订单</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="search_bar clearfix">
+    <a href="index.html" class="logo fl"><img src="/static/images/logo.png"></a>
+
+
+    <form action="/search" method="post">
+        <div class="search_con fl">
+            <input type="text" class="input_text fl" name="goodsName" placeholder="搜索商品">
+            <input type="submit" class="input_btn fr" name="" value="搜索">
+        </div>
+    </form>
+
+
+    <div class="guest_cart fr">
+        <a href="#" class="cart_name fl">我的购物车</a>
+        <div class="goods_count fl" id="show_count">10</div>
+    </div>
+</div>
+
+<div class="navbar_con">
+    <div class="navbar">
+        <h1 class="fl">全部商品分类</h1>
+        <ul class="navlist fl">
+            <li><a href="">首页</a></li>
+            <li class="interval">|</li>
+            <li><a href="">手机生鲜</a></li>
+            <li class="interval">|</li>
+            <li><a href="">抽奖</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="breadcrumb">
+    <a href="#">全部分类</a>
+    <span>></span>
+    <a href="#">搜索结果</a>
+</div>
+
+
+<div class="main_wrap clearfix">
+    <div class="r_wrap fr clearfix">
+        <div class="sort_bar">
+            <a href="/goodsType?Id={{.Id}}" {{if compare .sort ""}}class="active"{{end}}>默认</a>
+            <a href="/goodsType?Id={{.Id}}&sort=Price" {{if compare .sort "Price"}}class="active"{{end}}>价格</a>
+            <a href="/goodsType?Id={{.Id}}&sort=Sale" {{if compare .sort "Sale"}}class="active"{{end}}>人气</a>
+        </div>
+
+        <ul class="goods_type_list clearfix">
+        {{range .goods}}
+            <li>
+                <a href="detail.html"><img src="http://192.168.11.141:8888/{{.Image}}"></a>
+                <h4><a href="detail.html">{{.Name}}</a></h4>
+                <div class="operate">
+                    <span class="prize">￥{{.Price}}</span>
+                    <span class="unit">{{.Price}}/{{.Unite}}</span>
+                    <a href="#" class="add_goods" title="加入购物车"></a>
+                </div>
+            </li>
+        {{end}}
+        </ul>
+
+        <div class="pagenation">
+            <a href="/goodsType?Id={{$.Id}}&sort={{$.sort}}&pageIndex={{.prePage}}">上一页></a>
+        {{range $key,$val := .pages}}
+            <a href="/goodsType?Id={{$.Id}}&sort={{$.sort}}&pageIndex={{$val}}" class="active">{{$val}}</a>
+        {{end}}
+            <a href="/goodsType?Id={{$.Id}}&sort={{$.sort}}&pageIndex={{.nextPage}}">下一页></a>
+        </div>
+    </div>
+</div>
+
+
+<div class="py-container copyright footer">
+    <ul>
+        <li>关于我们</li>
+        <li>联系我们</li>
+        <li>联系客服</li>
+        <li>商家入驻</li>
+        <li>营销中心</li>
+        <li>手机品优购</li>
+        <li>销售联盟</li>
+        <li>品优购社区</li>
+    </ul>
+    <div class="address">地址：北京市昌平区建材城西路金燕龙办公楼一层 邮编：100096 电话：400-618-4000 传真：010-82935100</div>
+    <div class="beian">京ICP备08001421号京公网安备110108007702
+    </div>
+</div>
+</body>
+</html>

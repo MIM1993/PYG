@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>品优购，优质！优质！</title>
+	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+	<script type="text/javascript" src="../static/js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="../static/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../static/js/slide.js"></script>
+</head>
+<body>
+	<div class="header_con">
+		<div class="header">
+			<div class="welcome fl">欢迎来到品优购生鲜!</div>
+			<div class="fr">
+				<div class="login_info fl">
+					欢迎您：<em>张 山</em>
+				</div>
+				<div class="login_btn fl">
+					<a href="login.html">登录</a>
+					<span>|</span>
+					<a href="register.html">注册</a>
+				</div>
+				<div class="user_link fl">
+					<span>|</span>
+					<a href="user_center_info.html">用户中心</a>
+					<span>|</span>
+					<a href="cart.html">我的购物车</a>
+					<span>|</span>
+					<a href="user_center_order.html">我的订单</a>
+				</div>
+			</div>
+		</div>		
+	</div>
+
+	<div class="search_bar clearfix">
+		<a href="index.html" class="logo fl"><img src="/static/images/logo.png"></a>
+
+        <form action="/search" method="post">
+            <div class="search_con fl">
+                <input type="text" class="input_text fl" name="goodsName" placeholder="搜索商品">
+                <input type="submit" class="input_btn fr" name="" value="搜索">
+            </div>
+        </form>
+
+		<div class="guest_cart fr">
+			<a href="#" class="cart_name fl">我的购物车</a>
+			<div class="goods_count fl" id="show_count">10</div>
+		</div>
+	</div>
+
+	<div class="navbar_con">
+		<div class="navbar">
+			<h1 class="fl">全部商品分类</h1>
+			<ul class="navlist fl">
+				<li><a href="">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="center_con clearfix">
+		<ul class="subnav fl">
+			{{range .GoodsTypes}}
+			<li><a href="/goodsType?Id={{.Id}}" class="fruit">{{.Name}}</a></li>
+			{{end}}
+		</ul>
+		<div class="slide fl">
+			<ul class="slide_pics">
+				{{range .goodsBanners}}
+				<li><img src="http://192.168.11.141:8888/{{.Image}}" alt="幻灯片"></li>
+				{{end}}
+			</ul>
+			<div class="prev"></div>
+			<div class="next"></div>
+			<ul class="points"></ul>
+		</div>
+		<div class="adv fl">
+		{{range .promotions}}
+            <a href="{{.Url}}"><img src="http://192.168.11.141:8888/{{.Image}}"></a>
+		{{end}}
+		</div>
+	</div>
+{{range .goods}}
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model01">{{.goodsType.Name}}</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{{range .textGoods}}
+				<a href="#">{{.GoodsSKU.Name}}</a>
+				{{end}}
+			</div>
+			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="http://192.168.11.141:8888/{{.goodsType.Image}}"></div>
+			<ul class="goods_list fl">
+				{{range .imageGoods}}
+				<li>
+					<h4><a href="/goodsDetail?Id={{.GoodsSKU.Id}}">{{.GoodsSKU.Name}}</a></h4>
+					<a href="/goodsDetail?Id={{.GoodsSKU.Id}}"><img src="http://192.168.11.141:8888/{{.GoodsSKU.Image}}"></a>
+					<div class="prize">¥ {{.GoodsSKU.Price}}</div>
+				</li>
+				{{end}}
+			</ul>
+		</div>
+	</div>
+{{end}}
+
+	<div class="py-container copyright footer">
+		<ul>
+			<li>关于我们</li>
+			<li>联系我们</li>
+			<li>联系客服</li>
+			<li>商家入驻</li>
+			<li>营销中心</li>
+			<li>手机品优购</li>
+			<li>销售联盟</li>
+			<li>品优购社区</li>
+		</ul>
+		<div class="address">地址：北京市昌平区建材城西路金燕龙办公楼一层 邮编：100096 电话：400-618-4000 传真：010-82935100</div>
+		<div class="beian">京ICP备08001421号京公网安备110108007702
+		</div>
+	</div>
+</body>
+</html>
