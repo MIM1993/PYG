@@ -132,6 +132,7 @@ func (this *GoodController) ShowDetail() {
 	qs.OrderBy("-Time").Limit(2, 0).All(&newgoods)
 
 	//返回数据
+	this.Data["Id"]=Id
 	this.Data["newgoods"] = newgoods
 	this.Data["goodsku"] = goodsku
 	this.TplName = "detail.html"

@@ -66,5 +66,8 @@ func init() {
 
     //商品搜索
     beego.Router("/search",&controllers.GoodController{},"post:Seach")
+
+    //------------------购物车模块-------------------------------------------------------------
+    beego.Router("/user/addCart",&controllers.CartController{},"post:HandleAddCar")
 }
 
