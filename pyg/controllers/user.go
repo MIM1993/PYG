@@ -356,8 +356,13 @@ func (this *UserController) Logout() {
 
 //展示用户中心页面
 func (this *UserController) ShowUserCenterInfo() {
-	name := this.GetSession("name")
 	o := orm.NewOrm()
+	var user models.User
+	name := this.GetSession("name")
+	user.Name=name.(string)
+	o.Read(&user,"Name")
+	this.Data["user"]=user
+
 	var addr models.Address
 	o.QueryTable("Address").RelatedSel("User").Filter("User__Name", name.(string)).Filter("IsDefault", true).One(&addr)
 	this.Data["addr"] = addr

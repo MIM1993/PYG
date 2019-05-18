@@ -81,6 +81,10 @@ func init() {
 	beego.Router("/deleteCart",&controllers.CartController{},"post:HandleDeleteCart")
 
 	//--------------------------订单操作----------------------------------------------------------------------
+	//展示订单操作
 	beego.Router("/user/addOrder",&controllers.OrderController{},"post:ShowOrder")
+
+	//提交订单操作
+	beego.Router("/pushOrder",&controllers.OrderController{},"post:HandlePushOrder")
 }
 
