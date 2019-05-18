@@ -19,6 +19,14 @@ func (this *GoodController) ShowIndex() {
 	o := orm.NewOrm()
 	//创建容器
 	var oneclass []models.TpshopCategory
+	//获取sission，判断是否登陆
+	name := this.GetSession("name")
+	if name != nil {
+		this.Data["name"] = name.(string)
+	} else {
+		this.Data["name"] = ""
+	}
+
 	o.QueryTable("TpshopCategory").Filter("Pid", 0).All(&oneclass)
 	//获取二菜单级数据
 	//定义总容器  map切片
@@ -54,14 +62,6 @@ func (this *GoodController) ShowIndex() {
 
 	//传递数据给前端
 	this.Data["types"] = types
-
-	//获取sission，判断是否登陆
-	name := this.GetSession("name")
-	if name != nil {
-		this.Data["name"] = name.(string)
-	} else {
-		this.Data["name"] = ""
-	}
 	this.TplName = "index.html"
 }
 

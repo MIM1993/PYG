@@ -26,7 +26,7 @@ func (this *UserController) ShowRegister() {
 }
 
 //发送错误信息函数
-func respFunc(this *UserController, resp map[string]interface{}) {
+func respFunc(this *beego.Controller, resp map[string]interface{}) {
 	//发送数据
 	this.Data["json"] = resp
 	//定义发送方式,json方式
@@ -49,7 +49,7 @@ func (this *UserController) HandleSendMsg() {
 	resp := make(map[string]interface{})
 
 	//向前端发送信息
-	defer respFunc(this, resp)
+	defer respFunc(&this.Controller, resp)
 	//校验数据
 	if phone == "" {
 		fmt.Println("获取电话号码失败")

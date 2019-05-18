@@ -68,6 +68,19 @@ func init() {
     beego.Router("/search",&controllers.GoodController{},"post:Seach")
 
     //------------------购物车模块-------------------------------------------------------------
-    beego.Router("/user/addCart",&controllers.CartController{},"post:HandleAddCar")
+    //添加购物车操作
+    beego.Router("/addCart",&controllers.CartController{},"post:HandleAddCar")
+    
+    //展示购物车
+    beego.Router("/user/showCart",&controllers.CartController{},"get:ShowCart")
+
+	//处理添加购物车数量
+	beego.Router("/upCart",&controllers.CartController{},"post:HandleUpCart")
+
+	//删除购物车
+	beego.Router("/deleteCart",&controllers.CartController{},"post:HandleDeleteCart")
+
+	//--------------------------订单操作----------------------------------------------------------------------
+	beego.Router("/user/addOrder",&controllers.OrderController{},"post:ShowOrder")
 }
 
