@@ -6,6 +6,7 @@ import (
 	"pyg/pyg/models"
 	"fmt"
 	"math"
+	"github.com/gomodule/redigo/redis"
 )
 
 //货物控制器
@@ -130,6 +131,22 @@ func (this *GoodController) ShowDetail() {
 	var newgoods []models.GoodsSKU
 	qs := o.QueryTable("GoodsSKU").RelatedSel("GoodsType").Filter("GoodsType__Name", goodsku.GoodsType.Name)
 	qs.OrderBy("-Time").Limit(2, 0).All(&newgoods)
+
+	//储存浏览数据
+	name := this.GetSession("name")
+	if name !=nil{
+		conn,err := redis.Dial("tcp","127.0.0.1:6379")
+		if err!=nil{
+			defer conn.Close()
+			fmt.Println("redis连接错误")
+			this.Redirect("/index_sx", 302)
+			return
+		}else{
+			defer conn.Close()
+			conn.Do("lrem","history_"+name.(string),0,Id) //删除重复数据
+			conn.Do("lpush","history_"+name.(string),Id)  //左插入
+		}
+	}
 
 	//返回数据
 	this.Data["Id"]=Id

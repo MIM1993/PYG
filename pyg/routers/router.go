@@ -39,8 +39,8 @@ func init() {
 	beego.Router("/user/logout",&controllers.UserController{},"get:Logout")
 
 	//展示用户中心页
-	beego.Router("/user/userCenterInfo",&controllers.UserController{},"get:ShowUserCenterInfo")
-
+	//beego.Router("/user/userCenterInfo",&controllers.UserController{},"get:ShowUserCenterInfo")
+	beego.Router("/user/userCenterInfo",&controllers.UserController{},"get:ShowPerinfo")
 	//展示与操作用户中心地址页面
 	beego.Router("/user/site",&controllers.UserController{},"get:ShowSite;post:HandleSite")
 
@@ -49,6 +49,9 @@ func init() {
 
 	//展示订单页面
 	beego.Router("/user/order",&controllers.UserController{},"get:ShowOrder")
+
+	//展示用户中心订单页
+	beego.Router("/user/userOrder",&controllers.UserController{},"get:ShowUserOrder")
 
 
 	//----------------------------------------货物模块--------------------------------------------------------------
@@ -86,5 +89,8 @@ func init() {
 
 	//提交订单操作
 	beego.Router("/pushOrder",&controllers.OrderController{},"post:HandlePushOrder")
+
+	//付款
+	beego.Router("/pay",&controllers.OrderController{},"get:HandlePay")
 }
 

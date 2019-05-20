@@ -13,6 +13,8 @@ import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk"
 	"github.com/astaxie/beego/utils"
 	"encoding/base64"
+	"math"
+	"github.com/gomodule/redigo/redis"
 )
 
 //用户控制器
@@ -359,15 +361,15 @@ func (this *UserController) ShowUserCenterInfo() {
 	o := orm.NewOrm()
 	var user models.User
 	name := this.GetSession("name")
-	user.Name=name.(string)
-	o.Read(&user,"Name")
-	this.Data["user"]=user
+	user.Name = name.(string)
+	o.Read(&user, "Name")
+	this.Data["user"] = user
 
 	var addr models.Address
 	o.QueryTable("Address").RelatedSel("User").Filter("User__Name", name.(string)).Filter("IsDefault", true).One(&addr)
 	this.Data["addr"] = addr
 
-	this.Data["index"]=1
+	this.Data["index"] = 1
 	this.Layout = "layout.html"
 	this.TplName = "user_center_info.html"
 }
@@ -385,7 +387,7 @@ func (this *UserController) ShowSite() {
 	o.QueryTable("Address").RelatedSel("User").Filter("User__Name", name).Filter("IsDefault", true).One(&address)
 	//传递数据
 	this.Data["address"] = address
-	this.Data["index"]=3
+	this.Data["index"] = 3
 	//this.Data["username"] = username
 	//返回数据
 	this.Layout = "layout.html"
@@ -441,17 +443,91 @@ func (this *UserController) ShowPerinfo() {
 	o := orm.NewOrm()
 	var addr models.Address
 	o.QueryTable("Address").RelatedSel("User").Filter("User__Name", name.(string)).Filter("IsDefault", true).One(&addr)
+
+	//展示最近浏览商品
+	//从redis中获取数据
+	conn, err := redis.Dial("tcp", "127.0.0.1:6379")
+	if err != nil {
+		fmt.Println("redis连接错误")
+		return
+	}
+	goodIds, err := redis.Ints(conn.Do("lrange", "history_"+name.(string), 0, 5))
+	if err != nil {
+		fmt.Println("redis数据获取错误")
+		return
+	}
+	var goods []models.GoodsSKU
+	for _, v := range goodIds {
+		var temp models.GoodsSKU
+		temp.Id = v
+		o.Read(&temp)
+		goods = append(goods, temp)
+	}
+	this.Data["goods"] = goods
+
+	//返回数据
 	this.Data["addr"] = addr
-	this.Data["index"]=1
+	this.Data["index"] = 1
 	this.Layout = "layout.html"
 	this.TplName = "user_center_info.html"
 }
 
 //展示订单信息
-func (this *UserController)ShowOrder(){
+func (this *UserController) ShowOrder() {
 	//username := this.GetSession("name")
 
-	this.Data["index"]=2
-	this.Layout="layout.html"
-	this.TplName="user_center_order.html"
+	this.Data["index"] = 2
+	this.Layout = "layout.html"
+	this.TplName = "user_center_order.html"
+}
+
+//展示用户中心订单详情
+func (this *UserController) ShowUserOrder() {
+	//从数据库中获取当前用户所有订单信息
+	name := this.GetSession("name")
+	//获取当前订单信息
+	o := orm.NewOrm()
+
+	//处理页码问题
+	qs := o.QueryTable("OrderInfo").RelatedSel("User").Filter("User__Name", name.(string))
+	count, _ := qs.Count()
+	pageSize := 3
+	pageCount := int(math.Ceil(float64(count) / float64(pageSize)))
+	pageIndex, _ := this.GetInt("pageIndex", 1)
+	pages := PageEdit(pageCount, pageIndex)
+	this.Data["pages"] = pages
+	//上一页、下一页问题
+	var parPage, nextPage int
+	if pageIndex-1 <= 0 {
+		parPage = 1
+	} else {
+		parPage = pageIndex - 1
+	}
+	if pageIndex+1 > pageCount {
+		nextPage = pageCount
+	} else {
+		nextPage = pageIndex + 1
+	}
+	this.Data["parPage"] = parPage
+	this.Data["nextPage"] = nextPage
+
+	var orderinfos []models.OrderInfo
+	qs.OrderBy("-Time").Limit(pageSize, pageSize*(pageIndex-1)).All(&orderinfos)
+
+	//定义存放数据的容器[]map[string]interface{}
+	var orders []map[string]interface{}
+	for _, v := range orderinfos {
+		//定义行容器
+		temp := make(map[string]interface{})
+		var OrderGoods []models.OrderGoods
+		o.QueryTable("OrderGoods").RelatedSel("OrderInfo", "GoodsSKU").Filter("OrderInfo__Id", v.Id).All(&OrderGoods)
+
+		temp["orderInfo"] = v
+		temp["orderGoods"] = OrderGoods
+		orders = append(orders, temp)
+	}
+	//传递数据到前端
+	this.Data["orders"] = orders
+	this.Layout = "layout.html"
+	this.TplName = "user_center_order.html"
 }
